@@ -17,8 +17,16 @@ updateClock();
 setInterval(updateClock, 1000);
 
 async function getBackendMessage() {
-    const response = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/data');
-    const data = await response.json();
+    try {
+        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/data`, {
+            credentials: 'include'
+        });
+        if (response.ok) {
+            const data = await response.json();
+        }
+    } catch (err) {
+        console.error("Background data logging connection offline:", err);
+    }
 }
 
 getBackendMessage();

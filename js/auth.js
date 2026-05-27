@@ -3,7 +3,7 @@ async function loadLoginView() {
     if (!container) return;
 
     try {
-        const response = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/content/login');
+        const response = await fetch('/templates/login_content.html'); 
         container.innerHTML = await response.text();
         attachLoginListener();
     } catch (error) {
@@ -16,7 +16,7 @@ async function loadRegisterView() {
     if (!container) return;
 
     try {
-        const response = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/content/register');
+        const response = await fetch('/templates/register_content.html'); 
         container.innerHTML = await response.text();
         attachRegisterListener();
     } catch (error) {
@@ -35,10 +35,11 @@ function attachLoginListener() {
         const password = document.getElementById('login-password').value;
 
         try {
-            const response = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/login', {
+            const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password }),
+                credentials: 'include'
             });
 
             const result = await response.json();
@@ -50,8 +51,8 @@ function attachLoginListener() {
                 }
                 setTimeout(() => { navigateTo('user_center'); }, 1000);
             } else {
-				showToast(result.message, "error");
-			}
+                showToast(result.message, "error");
+            }
         } catch (error) {
             messageDiv.textContent = "Connection failed.";
             messageDiv.className = "text-error";
@@ -61,7 +62,10 @@ function attachLoginListener() {
 
 async function handleLogout() {
     try {
-        const response = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/logout', { method: 'POST' });
+        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/logout`, { 
+            method: 'POST',
+            credentials: 'include'
+        });
 
         if (response.ok) {
             showToast("Logged out successfully", 'success');
@@ -74,6 +78,6 @@ async function handleLogout() {
         }
     } catch (error) {
         console.error('Logout error:', error);
-        showToast("Connection error during logout.", 'error');
+        showToast("Logout failed.", 'error');
     }
 }

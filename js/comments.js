@@ -20,14 +20,16 @@ async function loadComments(postId, container) {
     if (!postId || postId === "undefined" || !container) return;
 
     try {
-        const dataResponse = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}/comments`);
+        const dataResponse = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}/comments`, {
+            credentials: 'include'
+        });
         if (!dataResponse.ok) return;
         const comments = await dataResponse.json();
 
         container.innerHTML = '';
 
         if (comments.length === 0) {
-            container.innerHTML = '<p class="no-comments-msg">No comments yet.</p>';
+            container.innerHTML = '<p class=\"no-comments-msg\">No comments yet.</p>';
             return;
         }
 
@@ -36,21 +38,25 @@ async function loadComments(postId, container) {
             if (templateResponse.ok) {
                 commentTemplateHtml = await templateResponse.text();
             } else {
-                console.error("Failed to load comment_item.html component file.");
+                console.error("Failed to load local comment template layout file.");
                 return;
             }
         }
 
         comments.forEach(c => {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = commentTemplateHtml;
-            const commentEl = tempDiv.firstElementChild;
+            let html = commentTemplateHtml;
+            
+            const commentEl = document.createElement('div');
+            commentEl.className = 'comment-item';
+            commentEl.innerHTML = html;
 
             const img = commentEl.querySelector('.comment-img-target');
-            if (img) img.src = c.profile_pic || '/img/default-avatar.png';
+            if (img) {
+                img.src = c.profilePicPath ? `${window.APP_CONFIG.BACKEND_URL}/${c.profilePicPath}` : '/img/default-avatar.png';
+            }
 
             const usernameSpan = commentEl.querySelector('.comment-username-target');
-            if (usernameSpan) usernameSpan.innerHTML = `<strong>${c.username}</strong>`;
+            if (usernameSpan) usernameSpan.innerText = c.username;
 
             const textDiv = commentEl.querySelector('.comment-text-target');
             if (textDiv) textDiv.innerText = c.content;
@@ -79,7 +85,8 @@ async function submitComment(btn) {
         const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}/comment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: input.value })
+            body: JSON.stringify({ content: input.value }),
+            credentials: 'include'
         });
 
         if (response.ok) {
@@ -91,6 +98,6 @@ async function submitComment(btn) {
             }
         }
     } catch (error) {
-        console.error("Comment submission failed:", error);
+        console.error("Error executing comment submission transaction:", error);
     }
 }

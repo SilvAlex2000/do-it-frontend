@@ -1,32 +1,24 @@
 async function submitPost() {
     const content = document.getElementById('post-content').value;
     const fileInput = document.getElementById('post-image-file');
-
     const file = fileInput.files ? fileInput.files[0] : null;
 
     if (file && file.size > 8 * 1024 * 1024) {
-        if (typeof showToast === 'function') {
-            showToast("File is too large! Maximum size is 10MB.", "error");
-        } else {
-            alert("File is too large! Maximum size is 10MB.");
-        }
+        if (typeof showToast === 'function') showToast("File is too large! Maximum size is 10MB.", "error");
         return;
     }
 
-    if (!content.trim() && !file) {
-        return;
-    }
+    if (!content.trim() && !file) return;
 
     const formData = new FormData();
     formData.append('content', content);
-    if (file) {
-        formData.append('file', file);
-    }
+    if (file) formData.append('file', file);
 
     try {
-        const response = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/posts', {
+        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts`, {
             method: 'POST',
-            body: formData
+            body: formData,
+            credentials: 'include'
         });
 
         if (response.ok) {
@@ -38,13 +30,10 @@ async function submitPost() {
 
             setTimeout(() => {
                 if (typeof loadHomeFeed === 'function') loadHomeFeed();
-            }, 300);
-        } else if (response.status === 413) {
-            if (typeof showToast === 'function') showToast("Server rejected the file size.", "error");
+            }, 500);
         }
     } catch (e) {
-        console.error("Error posting:", e);
-        if (typeof showToast === 'function') showToast("An error occurred during upload.", "error");
+        console.error("Post creation event failure:", e);
     }
 }
 

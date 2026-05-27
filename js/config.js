@@ -1,4 +1,4 @@
-const IS_PRODUCTION = false;
+const IS_PRODUCTION = true;
 
 window.APP_CONFIG = {
     BACKEND_URL: IS_PRODUCTION

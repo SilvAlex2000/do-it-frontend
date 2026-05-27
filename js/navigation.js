@@ -1,6 +1,8 @@
 async function updateNavigation(forceData = null) {
     try {
-        const data = forceData || await (await fetch('${window.APP_CONFIG.BACKEND_URL}/api/check-auth')).json();
+        const data = forceData || await (await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/check-auth`, {
+			credentials: 'include'
+		})).json();
 
         const loggedInNav = document.getElementById('logged-in-nav') || document.getElementById('loggedInNav');
         const userBtn = document.getElementById('btn-user');
@@ -28,7 +30,9 @@ async function navigateTo(pageName) {
     const main = document.getElementById('main-content');
     if (!main) return;
 
-    const authCheck = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/check-auth');
+    const authCheck = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/check-auth`, {
+		credentials: 'include'
+	});
     const auth = await authCheck.json();
 
     if (!auth.is_logged_in && pageName !== 'user') {
@@ -53,7 +57,7 @@ async function navigateTo(pageName) {
         }
 
         if (pageName === 'user_center') {
-            fetch('${window.APP_CONFIG.BACKEND_URL}/api/data').then(res => res.json()).then(data => {
+            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/data`).then(res => res.json()).then(data => {
                 const userField = document.getElementById('display-username');
                 const picField = document.getElementById('display-profile-pic');
                 if (userField) userField.innerText = data.user;
@@ -82,7 +86,7 @@ async function navigateTo(pageName) {
                 try {
                     const [postRes, templateRes] = await Promise.all([
                         fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}`),
-                        fetch('${window.APP_CONFIG.BACKEND_URL}/api/content/post-item')
+                        fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/post-item`)
                     ]);
 
                     const postData = await postRes.json();
@@ -111,7 +115,7 @@ async function loadPostsIntoContainer(apiUrl, containerId) {
     try {
         const [postsReq, templateReq] = await Promise.all([
             fetch(apiUrl),
-            fetch('${window.APP_CONFIG.BACKEND_URL}/api/content/post-item')
+            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/post-item`)
         ]);
         const posts = await postsReq.json();
         const templateHtml = await templateReq.text();
@@ -123,11 +127,13 @@ async function loadPostsIntoContainer(apiUrl, containerId) {
 }
 
 function loadHomeFeed() {
-    loadPostsIntoContainer('${window.APP_CONFIG.BACKEND_URL}/api/posts', 'posts-container');
+    loadPostsIntoContainer(`${window.APP_CONFIG.BACKEND_URL}/api/posts`, 'posts-container');
 }
 
 async function goToMyPublicProfile() {
-    const res = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/check-auth');
+    const res = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/check-auth`, {
+		credentials: 'include'
+	});
     const data = await res.json();
     if (data.is_logged_in) {
         navigateTo(`profile/${data.user}`);

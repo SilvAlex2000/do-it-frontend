@@ -3,7 +3,9 @@ async function loadProfilePosts(username) {
     if (!container) return;
 
     try {
-        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts?username=${username}`);
+        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts?username=${username}`, {
+            credentials: 'include'
+        });
         if (!response.ok) throw new Error("Could not fetch profile feed posts.");
 
         const posts = await response.json();
@@ -28,7 +30,7 @@ async function loadProfilePosts(username) {
 async function uploadPic() {
     const fileInput = document.getElementById('pic-upload');
     if (!fileInput || fileInput.files.length === 0) {
-        showToast("Please select an image first", "error");
+        showToast("Please select an image first", \"error\");
         return;
     }
 
@@ -38,7 +40,8 @@ async function uploadPic() {
     try {
         const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/upload-profile-pic`, {
             method: 'POST',
-            body: formData
+            body: formData,
+            credentials: 'include'
         });
 
         const result = await response.json();
@@ -51,8 +54,8 @@ async function uploadPic() {
         } else {
             showToast(result.message, "error");
         }
-    } catch (error) {
-        console.error("Upload failed:", error);
-        showToast("Server error during upload", "error");
+    } catch (e) {
+        console.error("Profile picture upload failure sequence:", e);
+        showToast("Upload failed.", "error");
     }
 }

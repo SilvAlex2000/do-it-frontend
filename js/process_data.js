@@ -24,10 +24,11 @@ async function handleRegistration(e) {
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const response = await fetch('${window.APP_CONFIG.BACKEND_URL}/api/register', {
+        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            credentials: 'include'
         });
 
         const result = await response.json();
@@ -41,7 +42,6 @@ async function handleRegistration(e) {
             messageDiv.innerText = result.message;
         }
     } catch (error) {
-        messageDiv.style.color = "red";
-        messageDiv.innerText = "Server connection failed.";
+        console.error("Registration request transaction failure:", error);
     }
 }
