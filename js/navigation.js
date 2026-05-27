@@ -45,9 +45,9 @@ async function navigateTo(pageName) {
     }
 
     try {
-        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/${pageName}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const html = await response.text();
+		const response = await fetch(`/templates/${pageName}_content.html`);
+		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+		const html = await response.text();
 
         if (pageName === 'user') {
             main.innerHTML = `<div class="auth-wrapper"><h2 id="user-title">Login</h2><div id="auth-container"></div></div>`;
@@ -114,9 +114,9 @@ async function loadPostsIntoContainer(apiUrl, containerId) {
     if (!container) return;
     try {
         const [postsReq, templateReq] = await Promise.all([
-            fetch(apiUrl),
-            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/post-item`)
-        ]);
+			fetch(apiUrl),
+			fetch('/templates/post-item_content.html')
+		]);
         const posts = await postsReq.json();
         const templateHtml = await templateReq.text();
         container.innerHTML = posts.length === 0 ? '<p>No posts found.</p>' : '';

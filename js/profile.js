@@ -30,7 +30,7 @@ async function loadProfilePosts(username) {
 async function uploadPic() {
     const fileInput = document.getElementById('pic-upload');
     if (!fileInput || fileInput.files.length === 0) {
-        showToast("Please select an image first", \"error\");
+        showToast("Please select an image first", 'error');
         return;
     }
 
