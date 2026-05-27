@@ -1,0 +1,23 @@
+<div class="home-feed-container">
+    <div class="main-text create-post-section" id="drop-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <h3>Create a Post</h3>
+        <textarea id="post-content" class="post-input-area" placeholder="Share something..."></textarea>
+
+        <div class="post-image-controls">
+            <input type="file" id="post-image-file" class="share-image-input" accept="image/*" onchange="previewPostImage(this)">
+            <button class="icon-btn" onclick="document.getElementById('post-image-file').click()">
+                <i class="fas fa-image"></i> Add Image
+            </button>
+            <div id="post-image-preview-container" class="share-image-preview" style="display: none;">
+                <button class="remove-preview-btn" onclick="clearPostImagePreview(event)" title="Remove image">
+                    <i class="fas fa-times"></i>
+                </button>
+                <img id="post-image-preview" src="" class="preview-img-tag">
+            </div>
+        </div>
+
+        <button class="nav-btn submit-post-btn" onclick="submitPost()">Post</button>
+    </div>
+
+    <div id="posts-container"></div>
+</div>

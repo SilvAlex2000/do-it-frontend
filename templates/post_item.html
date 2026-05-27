@@ -1,0 +1,71 @@
+<div class="share-indicator">
+    <span class="sharer-name-target"></span> has shared...
+</div>
+<div class="post-card" id="post-card-template">
+
+    <div class="share-textbox" style="display: none;" onclick="event.stopPropagation()">
+        <textarea class="share-input" placeholder="Say something about this..."></textarea>
+        <button class="submit-share-btn" onclick="submitShare(this)">Share</button>
+    </div>
+
+    <div class="post-admin-actions">
+        <button class="share-btn" onclick="event.stopPropagation(); toggleShareBox(this)">
+            <i class="fas fa-share-square"></i>
+        </button>
+        <button class="delete-btn" onclick="event.stopPropagation(); deletePost(this)">
+            <i class="fas fa-trash"></i>
+        </button>
+        <button class="edit-btn" style="display: none;" onclick="event.stopPropagation(); startEdit(this)">
+            <i class="fas fa-edit"></i>
+        </button>
+    </div>
+
+    <div class="edit-textbox" style="display: none;" onclick="event.stopPropagation()">
+        <textarea class="edit-input"></textarea>
+        <div class="edit-actions">
+            <button class="save-edit-btn" onclick="submitEdit(this)">Save</button>
+            <button class="cancel-edit-btn" onclick="cancelEdit(this)">Cancel</button>
+        </div>
+    </div>
+
+    <div class="post-header">
+        <img src="" class="post-avatar-small post-img-target">
+        <div class="post-meta">
+            <a href="" class="post-link-target">
+                <span class="post-username-target"></span>
+            </a>
+            <span class="post-date-target"></span>
+        </div>
+    </div>
+
+    <div class="post-content post-text-target"></div>
+
+    <div class="post-image-viewport" style="display: none;">
+        <img src="" class="post-content-image">
+    </div>
+
+    <div class="nested-post-container"></div>
+
+    <div class="post-actions">
+        <button class="vote-btn upvote-btn" onclick="event.stopPropagation()">
+            <i class="fas fa-arrow-up"></i>
+            <span class="upvote-count-target">0</span>
+        </button>
+        <button class="vote-btn downvote-btn" onclick="event.stopPropagation()">
+            <i class="fas fa-arrow-down"></i>
+            <span class="downvote-count-target">0</span>
+        </button>
+        <button class="comment-toggle-btn" onclick="event.stopPropagation(); toggleComments(this)">
+            <i class="fas fa-comment"></i>
+            <span class="comment-count-target">0</span> Comments
+        </button>
+    </div>
+
+    <div class="comments-section" style="display: none;" onclick="event.stopPropagation()">
+        <div class="comment-input-area">
+            <input type="text" class="comment-input" placeholder="Write a comment...">
+            <button class="comment-submit-btn" onclick="submitComment(this)">Post</button>
+        </div>
+        <div class="comments-container"></div>
+    </div>
+</div>
