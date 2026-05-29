@@ -146,7 +146,7 @@ async function loadPostsIntoContainer(apiUrl, containerId) {
             return;
         }
 
-        const templateReq = await fetch('/templates/post-item_content.html');
+        const templateReq = await fetch('/templates/post-item.html');
         const templateHtml = await templateReq.text();
         
         container.innerHTML = '';
