@@ -39,10 +39,10 @@ async function handleRegistration(e) {
         const result = await response.json();
 
         if (response.ok) {
-            messageDiv.style.color = "green";
-            messageDiv.innerText = "Success! Account created. Please check your email to verify your account.";
-            e.target.reset();
-        } else {
+			messageDiv.style.color = "green";
+			messageDiv.innerText = "Success! Account created. You can now log in."; 
+			e.target.reset();
+		} else {
             messageDiv.style.color = "red";
             messageDiv.innerText = result.message || "Registration failed. Please try again.";
         }
