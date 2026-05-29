@@ -60,7 +60,7 @@ async function navigateTo(pageName) {
     }
 
     try {
-		const response = await fetch(`/templates/${pageName}.html`);
+		const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/${pageName}`);
 		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 		const html = await response.text();
 
@@ -131,7 +131,7 @@ async function loadPostsIntoContainer(apiUrl, containerId) {
     try {
         const [postsReq, templateReq] = await Promise.all([
             fetch(apiUrl, { credentials: 'include' }),
-            fetch('/templates/post_item.html') 
+            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/post-item`)
         ]);
 
         if (!postsReq.ok || !templateReq.ok) {
