@@ -127,18 +127,36 @@ async function navigateTo(pageName) {
 async function loadPostsIntoContainer(apiUrl, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
+
     try {
-        const [postsReq, templateReq] = await Promise.all([
-			fetch(apiUrl),
-			fetch('/templates/post-item_content.html')
-		]);
-        const posts = await postsReq.json();
+        const response = await fetch(apiUrl, { credentials: 'include' });
+        
+        const text = await response.text(); 
+        console.log("DEBUG: Raw response from " + apiUrl + ":", text);
+
+        if (!response.ok) {
+            container.innerHTML = `<p>Error loading content: ${response.status}</p>`;
+            return;
+        }
+
+        const posts = JSON.parse(text);
+        
+        if (posts.length === 0) {
+            container.innerHTML = '<p>No posts found.</p>';
+            return;
+        }
+
+        const templateReq = await fetch('/templates/post-item_content.html');
         const templateHtml = await templateReq.text();
-        container.innerHTML = posts.length === 0 ? '<p>No posts found.</p>' : '';
+        
+        container.innerHTML = '';
         posts.forEach(post => {
             container.appendChild(renderPost(templateHtml, post));
         });
-    } catch (e) { console.error("Failed to load posts", e); }
+    } catch (e) { 
+        console.error("Failed to load posts:", e); 
+        container.innerHTML = '<p>Failed to load. Check console for details.</p>';
+    }
 }
 
 function loadHomeFeed() {
