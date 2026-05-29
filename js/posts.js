@@ -41,82 +41,87 @@ function renderPost(templateHtml, post) {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = templateHtml;
 
+    const postEl = tempDiv.querySelector('.post-card');
+    
+    if (!postEl) {
+        console.error("renderPost Error: Template missing .post-card", templateHtml);
+        return document.createDocumentFragment();
+    }
+
     const fragment = document.createDocumentFragment();
 
     const shareIndicator = tempDiv.querySelector('.share-indicator');
     if (post.shared_post && shareIndicator) {
         shareIndicator.style.display = 'block';
-        shareIndicator.querySelector('.sharer-name-target').innerText = post.username;
+        const sharerName = shareIndicator.querySelector('.sharer-name-target');
+        if (sharerName) sharerName.innerText = post.username;
         fragment.appendChild(shareIndicator);
     }
 
-    const postEl = tempDiv.querySelector('.post-card');
     postEl.dataset.postId = post.id;
     postEl.onclick = () => navigateTo(`post/${post.id}`);
 
-    const deleteBtn = postEl.querySelector('.delete-btn');
     const currentUser = document.body.dataset.currentUser;
-
+    const deleteBtn = postEl.querySelector('.delete-btn');
     if (deleteBtn) {
         if (currentUser && post.username === currentUser) {
             deleteBtn.style.display = 'block';
-            deleteBtn.onclick = (e) => {
-                e.stopPropagation();
-                deletePost(deleteBtn);
-            };
+            deleteBtn.onclick = (e) => { e.stopPropagation(); deletePost(deleteBtn); };
         } else {
             deleteBtn.style.display = 'none';
         }
     }
 
     const editBtn = postEl.querySelector('.edit-btn');
-
-    if (editBtn && post.username === currentUser) {
-        editBtn.style.display = 'block';
+    if (editBtn) {
+        editBtn.style.display = (post.username === currentUser) ? 'block' : 'none';
     }
 
     const pic = post.profile_pic || '/img/default-avatar.png';
-    postEl.querySelector('.post-img-target').src = pic;
-    postEl.querySelector('.post-username-target').innerText = post.username;
+    const postImg = postEl.querySelector('.post-img-target');
+    if (postImg) postImg.src = pic;
+    
+    const postUser = postEl.querySelector('.post-username-target');
+    if (postUser) postUser.innerText = post.username;
 
     const link = postEl.querySelector('.post-link-target');
-    link.href = "#";
-    link.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        navigateTo(`profile/${post.username}`);
-    };
-
-    const textTarget = postEl.querySelector('.post-text-target');
-    const imageViewport = postEl.querySelector('.post-image-viewport');
-    const contentImg = postEl.querySelector('.post-content-image');
-    const nestedContainer = postEl.querySelector('.nested-post-container');
-
-    if (post.content && post.content.trim() !== "") {
-        textTarget.innerText = post.content;
-        textTarget.style.display = 'block';
-    } else {
-        textTarget.style.display = 'none';
+    if (link) {
+        link.href = "#";
+        link.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateTo(`profile/${post.username}`);
+        };
     }
 
-    if (post.image_url) {
-        if (imageViewport && contentImg) {
-            imageViewport.style.display = 'block';
-            contentImg.src = post.image_url;
+    const textTarget = postEl.querySelector('.post-text-target');
+    if (textTarget) {
+        if (post.content && post.content.trim() !== "") {
+            textTarget.innerText = post.content;
+            textTarget.style.display = 'block';
+        } else {
+            textTarget.style.display = 'none';
         }
+    }
+
+    const imageViewport = postEl.querySelector('.post-image-viewport');
+    const contentImg = postEl.querySelector('.post-content-image');
+    if (post.image_url && imageViewport && contentImg) {
+        imageViewport.style.display = 'block';
+        contentImg.src = post.image_url;
     } else if (imageViewport) {
         imageViewport.style.display = 'none';
     }
 
+    const nestedContainer = postEl.querySelector('.nested-post-container');
     if (post.shared_post && nestedContainer) {
         nestedContainer.style.display = 'block';
-
         const previewDiv = document.createElement('div');
         previewDiv.className = 'original-post-preview';
         previewDiv.style.cssText = 'border: 1px solid #e0e0e0; border-left: 4px solid #007bff; padding: 10px; margin-top: 10px; background: #fafafa; border-radius: 4px; cursor: pointer;';
-
-        let originalImgHtml = post.shared_post.image_url
-            ? `<img src="${post.shared_post.image_url}" style="max-width:100%; max-height:150px; display:block; margin-top:5px; object-fit:contain;">`
+        
+        let originalImgHtml = post.shared_post.image_url 
+            ? `<img src="${post.shared_post.image_url}" style="max-width:100%; max-height:150px; display:block; margin-top:5px; object-fit:contain;">` 
             : '';
 
         previewDiv.innerHTML = `
@@ -124,14 +129,10 @@ function renderPost(templateHtml, post) {
             <p>${post.shared_post.content || ""}</p>
             ${originalImgHtml}
         `;
-
-        const originalId = post.shared_post.id;
-        previewDiv.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (originalId) navigateTo(`post/${originalId}`);
+        previewDiv.onclick = (e) => { 
+            e.preventDefault(); e.stopPropagation(); 
+            if (post.shared_post.id) navigateTo(`post/${post.shared_post.id}`); 
         };
-
         nestedContainer.innerHTML = '';
         nestedContainer.appendChild(previewDiv);
     } else if (nestedContainer) {
@@ -141,7 +142,6 @@ function renderPost(templateHtml, post) {
     const upSpan = postEl.querySelector('.upvote-count-target');
     const downSpan = postEl.querySelector('.downvote-count-target');
     const commentSpan = postEl.querySelector('.comment-count-target');
-
     if (upSpan) upSpan.innerText = post.upvotes || 0;
     if (downSpan) downSpan.innerText = post.downvotes || 0;
     if (commentSpan) commentSpan.innerText = post.commentCount || 0;
