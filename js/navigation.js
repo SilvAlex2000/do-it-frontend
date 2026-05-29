@@ -60,7 +60,7 @@ async function navigateTo(pageName) {
     }
 
     try {
-		const response = await fetch(`/templates/${pageName}_content.html`);
+		const response = await fetch(`/templates/${pageName}.html`);
 		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 		const html = await response.text();
 
