@@ -1,8 +1,23 @@
 async function updateNavigation(forceData = null) {
     try {
-        const data = forceData || await (await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/check-auth`, {
-			credentials: 'include'
-		})).json();
+        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/check-auth`, {
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            console.error("Auth check failed with status:", response.status);
+            return;
+        }
+
+        const text = await response.text();
+        
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error("Failed to parse JSON. Raw response:", text);
+            return;
+        }
 
         const loggedInNav = document.getElementById('logged-in-nav') || document.getElementById('loggedInNav');
         const userBtn = document.getElementById('btn-user');
@@ -12,17 +27,17 @@ async function updateNavigation(forceData = null) {
             if (loggedInNav) loggedInNav.style.display = 'block';
             if (userBtn) {
                 userBtn.title = "User Center";
-                userBtn.innerHTML = "<i class=\"fas fa-cog\"></i>"
+                userBtn.innerHTML = "<i class=\"fas fa-cog\"></i>";
             }
         } else {
             if (loggedInNav) loggedInNav.style.display = 'none';
             if (userBtn) {
                 userBtn.title = "Login";
-                userBtn.innerHTML = "<i id=\"user-btn-icon\" class=\"fas fa-sign-in-alt\"></i>"
+                userBtn.innerHTML = "<i id=\"user-btn-icon\" class=\"fas fa-sign-in-alt\"></i>";
             }
         }
     } catch (error) {
-        console.error("Auth check failed", error);
+        console.error("Auth check network error:", error);
     }
 }
 
