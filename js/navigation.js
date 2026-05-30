@@ -69,6 +69,14 @@ async function navigateTo(pageName) {
         if (!htmlResponse.ok) throw new Error(`HTML File not found: ${templateName}`);
         const html = await htmlResponse.text();
 		
+		if (html.includes('<!DOCTYPE html>') || html.includes('<html')) {
+            console.warn("Detected full page. Extracting main-content from response...");
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const innerMain = doc.getElementById('main-content');
+            html = innerMain ? innerMain.innerHTML : html;
+        }
+		
 		main.innerHTML = '';
 
         if (pageName === 'user') {
