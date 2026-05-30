@@ -60,64 +60,31 @@ async function navigateTo(pageName) {
     }
 
     try {
-        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/${pageName}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
-        const templateName = await response.text(); 
+        main.innerHTML = ''; 
 
-        const htmlResponse = await fetch(`/templates/${templateName}.html`);
-        if (!htmlResponse.ok) throw new Error(`HTML File not found: ${templateName}`);
-        const html = await htmlResponse.text();
-		
-		if (html.includes('<!DOCTYPE html>') || html.includes('<html')) {
-            console.warn("Detected full page. Extracting main-content from response...");
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const innerMain = doc.getElementById('main-content');
-            html = innerMain ? innerMain.innerHTML : html;
+        if (pageName.includes('profile/')) {
+            const username = pageName.split('/').pop();
+            
+            try {
+                const dataRes = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/profile/${username}`);
+                if (!dataRes.ok) throw new Error("Profile data not found");
+                const userData = await dataRes.json();
+
+                const templateRes = await fetch('/templates/user_profile_public.html');
+                if (!templateRes.ok) throw new Error("Profile template layout not found");
+                const templateHtml = await templateRes.text();
+
+                main.innerHTML = templateHtml;
+                document.getElementById('profile-username-header').innerText = userData.username;
+                document.getElementById('profile-avatar-header').src = userData.profile_pic;
+                
+                if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
+                
+            } catch (err) {
+                console.error("Error loading profile:", err);
+                main.innerHTML = "<p>Error loading profile.</p>";
+            }
         }
-		
-		main.innerHTML = '';
-
-        if (pageName === 'user') {
-            main.innerHTML = `<div class="auth-wrapper"><div id="auth-container"></div></div>`;
-            if (typeof loadLoginView === 'function') await loadLoginView();
-        } else {
-            main.innerHTML = html;
-        }
-
-        if (pageName === 'user_center') {
-            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/data`).then(res => res.json()).then(data => {
-                const userField = document.getElementById('display-username');
-                const picField = document.getElementById('display-profile-pic');
-                if (userField) userField.innerText = data.user;
-                if (picField) picField.src = data.profile_pic + "?v=" + Date.now();
-            });
-        }
-        else if (pageName === 'home') {
-            if (typeof loadHomeFeed === 'function') loadHomeFeed();
-        }
-        else if (pageName.includes('profile/')) {
-			const username = pageName.split('/').pop();
-			
-			try {
-				const dataRes = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/profile/${username}`);
-				const userData = await dataRes.json();
-
-				const templateRes = await fetch('/templates/user_profile_public.html');
-				const templateHtml = await templateRes.text();
-
-				main.innerHTML = templateHtml;
-				document.getElementById('profile-username-header').innerText = userData.username;
-				document.getElementById('profile-avatar-header').src = userData.profile_pic;
-				
-				if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
-				
-			} catch (err) {
-				console.error("Error loading profile:", err);
-				main.innerHTML = "<p>Error loading profile.</p>";
-			}
-		}
 
         else if (pageName.includes('post/')) {
             const postId = pageName.split('/').pop();
@@ -139,6 +106,36 @@ async function navigateTo(pageName) {
                     console.error("Error loading single post:", err);
                     container.innerHTML = "<p>Error loading post.</p>";
                 }
+            }
+        }
+
+        else {
+            const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/${pageName}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const templateName = await response.text(); 
+
+            const htmlResponse = await fetch(`/templates/${templateName}.html`);
+            if (!htmlResponse.ok) throw new Error(`HTML File not found: ${templateName}`);
+            const html = await htmlResponse.text();
+
+            if (pageName === 'user') {
+                main.innerHTML = `<div class="auth-wrapper"><div id="auth-container"></div></div>`;
+                if (typeof loadLoginView === 'function') await loadLoginView();
+            } else {
+                main.innerHTML = html;
+            }
+
+            if (pageName === 'user_center') {
+                fetch(`${window.APP_CONFIG.BACKEND_URL}/api/data`).then(res => res.json()).then(data => {
+                    const userField = document.getElementById('display-username');
+                    const picField = document.getElementById('display-profile-pic');
+                    if (userField) userField.innerText = data.user;
+                    if (picField) picField.src = data.profile_pic + "?v=" + Date.now();
+                });
+            }
+            else if (pageName === 'home') {
+                if (typeof loadHomeFeed === 'function') loadHomeFeed();
             }
         }
 
