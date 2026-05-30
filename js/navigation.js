@@ -91,7 +91,7 @@ async function navigateTo(pageName) {
         }
         else if (pageName.includes('profile/')) {
             const username = pageName.split('/').pop();
-            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/user-info/${username}`).then(res => res.json()).then(data => {
+            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/profile/${username}`).then(res => res.json()).then(data => {
                 const nameHeader = document.getElementById('profile-username-header');
                 const picHeader = document.getElementById('profile-avatar-header');
                 if (nameHeader) nameHeader.innerText = data.username;
