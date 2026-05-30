@@ -72,7 +72,7 @@ async function navigateTo(pageName) {
 		main.innerHTML = '';
 
         if (pageName === 'user') {
-            main.innerHTML = `<div class="auth-wrapper"><h2 id="user-title">Login</h2><div id="auth-container"></div></div>`;
+            main.innerHTML = `<div class="auth-wrapper"><div id="auth-container"></div></div>`;
             if (typeof loadLoginView === 'function') await loadLoginView();
         } else {
             main.innerHTML = html;
@@ -90,15 +90,26 @@ async function navigateTo(pageName) {
             if (typeof loadHomeFeed === 'function') loadHomeFeed();
         }
         else if (pageName.includes('profile/')) {
-            const username = pageName.split('/').pop();
-            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/profile/${username}`).then(res => res.json()).then(data => {
-                const nameHeader = document.getElementById('profile-username-header');
-                const picHeader = document.getElementById('profile-avatar-header');
-                if (nameHeader) nameHeader.innerText = data.username;
-                if (picHeader) picHeader.src = data.profile_pic;
-            });
-            if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
-        }
+			const username = pageName.split('/').pop();
+			
+			try {
+				const dataRes = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/profile/${username}`);
+				const userData = await dataRes.json();
+
+				const templateRes = await fetch('/templates/user_profile_public.html');
+				const templateHtml = await templateRes.text();
+
+				main.innerHTML = templateHtml;
+				document.getElementById('profile-username-header').innerText = userData.username;
+				document.getElementById('profile-avatar-header').src = userData.profile_pic;
+				
+				if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
+				
+			} catch (err) {
+				console.error("Error loading profile:", err);
+				main.innerHTML = "<p>Error loading profile.</p>";
+			}
+		}
 
         else if (pageName.includes('post/')) {
             const postId = pageName.split('/').pop();
