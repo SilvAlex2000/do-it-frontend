@@ -68,6 +68,8 @@ async function navigateTo(pageName) {
         const htmlResponse = await fetch(`/templates/${templateName}.html`);
         if (!htmlResponse.ok) throw new Error(`HTML File not found: ${templateName}`);
         const html = await htmlResponse.text();
+		
+		main.innerHTML = '';
 
         if (pageName === 'user') {
             main.innerHTML = `<div class="auth-wrapper"><h2 id="user-title">Login</h2><div id="auth-container"></div></div>`;
