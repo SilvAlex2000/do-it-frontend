@@ -65,6 +65,10 @@ async function navigateTo(pageName) {
         if (pageName.includes('profile/')) {
             const username = pageName.split('/').pop();
             
+			if (typeof window.loadProfilePosts === 'function') {
+				window.loadProfilePosts(targetUsername);
+			}
+			
             try {
                 const dataRes = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/profile/${username}`);
                 if (!dataRes.ok) throw new Error("Profile data not found");

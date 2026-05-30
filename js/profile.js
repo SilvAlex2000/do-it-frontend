@@ -63,3 +63,5 @@ async function uploadPic() {
         showToast("Upload failed.", "error");
     }
 }
+
+window.loadProfilePosts = loadProfilePosts;
