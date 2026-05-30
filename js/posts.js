@@ -191,7 +191,7 @@ async function loadPosts() {
     try {
         const [response, templateReq] = await Promise.all([
             fetch('${window.APP_CONFIG.BACKEND_URL}/api/posts'),
-            fetch('${window.APP_CONFIG.BACKEND_URL}/api/content/post-item')
+            fetch('/templates/post_item.html')
         ]);
 
         if (response.ok && templateReq.ok) {

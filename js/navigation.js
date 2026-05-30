@@ -154,7 +154,7 @@ async function loadPostsIntoContainer(apiUrl, containerId) {
     try {
         const [postsReq, templateReq] = await Promise.all([
             fetch(apiUrl, { credentials: 'include' }),
-            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/post-item`)
+            fetch('/templates/post_item.html')
         ]);
 
         if (!postsReq.ok || !templateReq.ok) {
