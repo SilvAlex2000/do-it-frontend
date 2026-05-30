@@ -6,6 +6,10 @@
     margin: 20px auto;
 }
 
+.user-title {
+	align: center;
+}
+
 .form-group input {
     width: 100%;
     padding: 12px;
