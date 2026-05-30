@@ -46,8 +46,8 @@ async function navigateTo(pageName) {
     if (!main) return;
 
     const authCheck = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/check-auth`, {
-		credentials: 'include'
-	});
+        credentials: 'include'
+    });
     const auth = await authCheck.json();
 
     if (!auth.is_logged_in && pageName !== 'user') {
@@ -60,9 +60,14 @@ async function navigateTo(pageName) {
     }
 
     try {
-		const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/${pageName}`);
-		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-		const html = await response.text();
+        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/${pageName}`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const templateName = await response.text(); 
+
+        const htmlResponse = await fetch(`/templates/${templateName}.html`);
+        if (!htmlResponse.ok) throw new Error(`HTML File not found: ${templateName}`);
+        const html = await htmlResponse.text();
 
         if (pageName === 'user') {
             main.innerHTML = `<div class="auth-wrapper"><h2 id="user-title">Login</h2><div id="auth-container"></div></div>`;
