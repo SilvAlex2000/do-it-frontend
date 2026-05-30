@@ -4,13 +4,15 @@ async function loadProfilePosts(username) {
 
     try {
         const [response, templateReq] = await Promise.all([
-            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts?username=${username}`, {
+            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/user/${username}`, {
                 credentials: 'include'
             }),
             fetch('/templates/post_item.html')
         ]);
 
-        if (!response.ok || !templateReq.ok) throw new Error("Could not fetch profile feed or template.");
+        if (!response.ok || !templateReq.ok) {
+            throw new Error("Could not fetch profile posts or card template.");
+        }
 
         const posts = await response.json();
         const postCardTemplate = await templateReq.text();
@@ -27,7 +29,7 @@ async function loadProfilePosts(username) {
             container.appendChild(postEl);
         });
     } catch (e) {
-        console.error(\"Failed to load profile posts\", e);
+        console.error("Failed to load profile posts", e);
     }
 }
 
