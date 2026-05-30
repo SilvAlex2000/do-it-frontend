@@ -3,12 +3,18 @@ async function loadProfilePosts(username) {
     if (!container) return;
 
     try {
-        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts?username=${username}`, {
-            credentials: 'include'
-        });
-        if (!response.ok) throw new Error("Could not fetch profile feed posts.");
+        const [response, templateReq] = await Promise.all([
+            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts?username=${username}`, {
+                credentials: 'include'
+            }),
+            fetch('/templates/post_item.html')
+        ]);
+
+        if (!response.ok || !templateReq.ok) throw new Error("Could not fetch profile feed or template.");
 
         const posts = await response.json();
+        const postCardTemplate = await templateReq.text();
+
         container.innerHTML = '';
 
         if (posts.length === 0) {
@@ -16,14 +22,12 @@ async function loadProfilePosts(username) {
             return;
         }
 
-        const postCardTemplate = document.getElementById('post-card-template')?.outerHTML || '';
-
         posts.forEach(post => {
             const postEl = renderPost(postCardTemplate, post);
             container.appendChild(postEl);
         });
     } catch (e) {
-        console.error("Failed to load profile posts", e);
+        console.error(\"Failed to load profile posts\", e);
     }
 }
 
