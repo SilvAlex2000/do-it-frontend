@@ -77,7 +77,7 @@ function renderPost(templateHtml, post) {
         editBtn.style.display = (post.username === currentUser) ? 'block' : 'none';
     }
 
-    const pic = `${window.APP_CONFIG.BACKEND_URL}/${post.profile_pic}`;
+    const pic = window.getProfilePicUrl(post.profile_pic);
     const postImg = postEl.querySelector('.post-img-target');
     if (postImg) postImg.src = pic;
     

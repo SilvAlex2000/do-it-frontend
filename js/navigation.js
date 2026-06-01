@@ -141,7 +141,7 @@ async function navigateTo(pageName) {
 						const picPath = data.profile_pic;
 						const cleanPath = picPath.startsWith('/') ? picPath.substring(1) : picPath;
 						
-						picField.src = `${window.APP_CONFIG.BACKEND_URL}/${cleanPath}?v=${Date.now()}`;
+						picField.src = window.getProfilePicUrl(data.profile_pic);
 					}
 				})
 				.catch(err => console.error("Failed to load user center data:", err));
