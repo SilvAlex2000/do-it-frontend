@@ -93,7 +93,7 @@ async function navigateTo(pageName) {
         }
 
         else if (pageName.includes('post/')) {
-			const postId = path.split('/')[1];
+			const postId = pageName.split('/')[1];
 			
 			fetch('/templates/post_view.html')
 				.then(res => res.text())
