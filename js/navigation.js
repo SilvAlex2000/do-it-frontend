@@ -99,29 +99,11 @@ async function navigateTo(pageName) {
 				.then(res => res.text())
 				.then(html => {
 					document.getElementById('main-content').innerHTML = html;
+					
 					loadSinglePost(postId);
-				});
-			
-            const container = document.getElementById('single-post-target');
-
-            if (container) {
-                try {
-                    const [postRes, templateRes] = await Promise.all([
-                        fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}`),
-                        fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/post-item`)
-                    ]);
-
-                    const postData = await postRes.json();
-                    const templateHtml = await templateRes.text();
-
-                    container.innerHTML = '';
-                    container.appendChild(renderPost(templateHtml, postData));
-                } catch (err) {
-                    console.error("Error loading single post:", err);
-                    container.innerHTML = "<p>Error loading post.</p>";
-                }
-            }
-        }
+				})
+				.catch(err => console.error("Error loading view shell:", err));
+		}
 
         else {
             const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/content/${pageName}`);
@@ -185,6 +167,32 @@ async function loadPostsIntoContainer(apiUrl, containerId) {
         });
     } catch (e) { 
         console.error("Failed to load posts", e); 
+    }
+}
+
+async function loadSinglePost(postId) {
+    const container = document.getElementById('single-post-target');
+    if (!container) {
+        console.error("Target container not found!");
+        return;
+    }
+
+    try {
+        const [postRes, templateRes] = await Promise.all([
+            fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}`, { credentials: 'include' }),
+            fetch('/templates/post_item.html')
+        ]);
+
+        if (!postRes.ok || !templateRes.ok) throw new Error("Failed to fetch post data");
+
+        const postData = await postRes.json();
+        const templateHtml = await templateRes.text();
+
+        container.innerHTML = '';
+        container.appendChild(renderPost(templateHtml, postData));
+    } catch (err) {
+        console.error("Error loading single post:", err);
+        container.innerHTML = "<p>Error loading post.</p>";
     }
 }
 
