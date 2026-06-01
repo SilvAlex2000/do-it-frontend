@@ -67,7 +67,7 @@ async function navigateTo(pageName) {
             
 			setTimeout(() => {
 				if (typeof window.loadProfilePosts === 'function') {
-					window.loadProfilePosts(targetUsername);
+					window.loadProfilePosts(username);
 				}
 			}, 50);
 			
