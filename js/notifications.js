@@ -114,6 +114,8 @@ async function handleNotificationClick(targetUrl, id) {
             method: 'PUT',
             credentials: 'include'
         });
+		
+		updateNotificationBadge();
         
         const dropdown = document.getElementById('notification-dropdown');
         if (dropdown) dropdown.style.display = 'none';
