@@ -52,10 +52,11 @@ async function loadComments(postId, container) {
             commentEl.innerHTML = html;
 
             const img = commentEl.querySelector('.comment-img-target');
-			console.log(c.profilePicPath);
+			const picPath = c.profile_pic;
+
 			if (img) {
-				if (c.profilePicPath) {
-					const cleanPath = c.profilePicPath.startsWith('/') ? c.profilePicPath.substring(1) : c.profilePicPath;
+				if (picPath && picPath !== "/img/default-avatar.png") {
+					const cleanPath = picPath.startsWith('/') ? picPath.substring(1) : picPath;
 					img.src = `${window.APP_CONFIG.BACKEND_URL}/${cleanPath}`;
 				} else {
 					img.src = '/img/default-avatar.png';
