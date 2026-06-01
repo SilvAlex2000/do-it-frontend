@@ -66,15 +66,14 @@ async function loadUserNotifications() {
 			let html = cachedItemHtml;
 			const unreadClass = notif.isRead ? '' : 'unread';
 			
-			const avatarUrl = notif.commenterAvatarUrl 
-				? `${window.APP_CONFIG.BACKEND_URL}/${notif.commenterAvatarUrl}` 
-				: '/img/default-avatar.png';
+			const avatarUrl = window.getProfilePicUrl(notif.commenterAvatarUrl);
 
 			html = html.replace(/{unread-class}/g, unreadClass)
 					   .replace(/{id}/g, notif.id)
 					   .replace(/{target-url}/g, notif.targetUrl)
 					   .replace(/{avatar-url}/g, avatarUrl)
-					   .replace(/{username}/g, notif.commenter)
+					   // Ensure property names match Notification.java (commenter, commentText)
+					   .replace(/{username}/g, notif.commenter) 
 					   .replace(/{comment-text}/g, notif.commentText || '') 
 					   .replace(/{time-ago}/g, formatTimeAgo(notif.createdAt));
 
