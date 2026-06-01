@@ -67,7 +67,7 @@ async function navigateTo(pageName) {
             
 			setTimeout(() => {
 				if (typeof window.loadProfilePosts === 'function') {
-					window.loadProfilePosts(targetUsername);
+					window.loadProfilePosts(username);
 				}
 			}, 50);
 			
@@ -81,7 +81,7 @@ async function navigateTo(pageName) {
                 const templateHtml = await templateRes.text();
 
                 main.innerHTML = templateHtml;
-				console.log(userData.profile_pic;
+				console.log(userData.profile_pic);
                 document.getElementById('profile-username-header').innerText = userData.username;
                 document.getElementById('profile-avatar-header').src = userData.profile_pic;
                 
