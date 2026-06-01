@@ -4,7 +4,7 @@ window.getProfilePicUrl = function(path) {
         return '/img/default-avatar.png';
     }
 	
-	if (path.includes('/img/default-avatar.png')) {
+	if (path.includes('default-avatar.png')) {
         return '/img/default-avatar.png';
     }
 
