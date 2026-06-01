@@ -3,7 +3,6 @@ function checkPasswordStrength() {
     const meter = document.getElementById('strength-meter');
     const text = document.getElementById('strength-text');
     
-    // Exact same criteria as the backend
     const hasLength = password.length >= 8;
     const hasUpper = /[A-Z]/.test(password);
     const hasLower = /[a-z]/.test(password);

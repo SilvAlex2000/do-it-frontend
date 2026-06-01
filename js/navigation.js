@@ -81,6 +81,7 @@ async function navigateTo(pageName) {
                 const templateHtml = await templateRes.text();
 
                 main.innerHTML = templateHtml;
+				console.log(userData.profile_pic;
                 document.getElementById('profile-username-header').innerText = userData.username;
                 document.getElementById('profile-avatar-header').src = userData.profile_pic;
                 
