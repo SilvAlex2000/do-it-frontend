@@ -5,8 +5,8 @@ window.getProfilePicUrl = function(path) {
 
     if (path.startsWith('http')) return path;
 
-    if (path.startsWith('/img/')) {
-        return path; 
+    if (path.includes('/img/default-avatar.png')) {
+        return '/img/default-avatar.png';
     }
 
     const cleanPath = path.startsWith('/') ? path.substring(1) : path;
