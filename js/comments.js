@@ -21,6 +21,7 @@ async function loadComments(postId, container) {
 
     try {
         const dataResponse = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}/comments`, {
+			method: 'GET',
             credentials: 'include'
         });
         if (!dataResponse.ok) return;
