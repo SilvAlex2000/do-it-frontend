@@ -108,7 +108,7 @@ function renderPost(templateHtml, post) {
     const contentImg = postEl.querySelector('.post-content-image');
     if (post.image_url && imageViewport && contentImg) {
         imageViewport.style.display = 'block';
-        contentImg.src = post.image_url;
+        contentImg.src = `${window.APP_CONFIG.BACKEND_URL}${post.image_url}`;
     } else if (imageViewport) {
         imageViewport.style.display = 'none';
     }
