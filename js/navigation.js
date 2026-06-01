@@ -86,6 +86,7 @@ async function navigateTo(pageName) {
                 avatar = window.getProfilePicUrl(userData.profile_pic);
 				if (avatar.includes('/img/default-avatar.png')) {
 					avatar = '/img/default-avatar.png';
+					console.log(avatar);
 				}
                 
                 if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
