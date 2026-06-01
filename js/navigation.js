@@ -127,13 +127,25 @@ async function navigateTo(pageName) {
             }
 
             if (pageName === 'user_center') {
-                fetch(`${window.APP_CONFIG.BACKEND_URL}/api/data`).then(res => res.json()).then(data => {
-                    const userField = document.getElementById('display-username');
-                    const picField = document.getElementById('display-profile-pic');
-                    if (userField) userField.innerText = data.user;
-                    if (picField) picField.src = data.profile_pic + "?v=" + Date.now();
-                });
-            }
+				fetch(`${window.APP_CONFIG.BACKEND_URL}/api/data`, {
+					credentials: 'include'
+				})
+				.then(res => res.json())
+				.then(data => {
+					const userField = document.getElementById('display-username');
+					const picField = document.getElementById('display-profile-pic');
+					
+					if (userField) userField.innerText = data.user;
+					
+					if (picField) {
+						const picPath = data.profile_pic;
+						const cleanPath = picPath.startsWith('/') ? picPath.substring(1) : picPath;
+						
+						picField.src = `${window.APP_CONFIG.BACKEND_URL}/${cleanPath}?v=${Date.now()}`;
+					}
+				})
+				.catch(err => console.error("Failed to load user center data:", err));
+			}
             else if (pageName === 'home') {
                 if (typeof loadHomeFeed === 'function') loadHomeFeed();
             }
