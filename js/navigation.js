@@ -93,7 +93,15 @@ async function navigateTo(pageName) {
         }
 
         else if (pageName.includes('post/')) {
-            const postId = pageName.split('/').pop();
+			const postId = path.split('/')[1];
+			
+			fetch('/templates/post_view.html')
+				.then(res => res.text())
+				.then(html => {
+					document.getElementById('main-content').innerHTML = html;
+					loadSinglePost(postId);
+				});
+			
             const container = document.getElementById('single-post-target');
 
             if (container) {
