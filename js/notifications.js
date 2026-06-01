@@ -63,25 +63,25 @@ async function loadUserNotifications() {
 
         listContainer.innerHTML = '';
         notifications.forEach(notif => {
-            let html = cachedItemHtml;
-            const unreadClass = notif.isRead ? '' : 'unread';
-            
-            const avatarUrl = notif.actorProfilePic 
-                ? `${window.APP_CONFIG.BACKEND_URL}/${notif.actorProfilePic}` 
-                : '/img/default-avatar.png';
+			let html = cachedItemHtml;
+			const unreadClass = notif.isRead ? '' : 'unread';
+			
+			const avatarUrl = notif.commenterAvatarUrl 
+				? `${window.APP_CONFIG.BACKEND_URL}/${notif.commenterAvatarUrl}` 
+				: '/img/default-avatar.png';
 
-            html = html.replace(/{unread-class}/g, unreadClass)
-                       .replace(/{id}/g, notif.id)
-                       .replace(/{target-url}/g, notif.targetUrl)
-                       .replace(/{avatar-url}/g, avatarUrl)
-                       .replace(/{username}/g, notif.actorUsername)
-                       .replace(/{comment-text}/g, notif.messageSnippet || '')
-                       .replace(/{time-ago}/g, formatTimeAgo(notif.createdAt));
+			html = html.replace(/{unread-class}/g, unreadClass)
+					   .replace(/{id}/g, notif.id)
+					   .replace(/{target-url}/g, notif.targetUrl)
+					   .replace(/{avatar-url}/g, avatarUrl)
+					   .replace(/{username}/g, notif.commenter)
+					   .replace(/{comment-text}/g, notif.commentText || '') 
+					   .replace(/{time-ago}/g, formatTimeAgo(notif.createdAt));
 
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = html.trim();
-            listContainer.appendChild(wrapper.firstChild);
-        });
+			const wrapper = document.createElement('div');
+			wrapper.innerHTML = html.trim();
+			listContainer.appendChild(wrapper.firstChild);
+		});
     } catch (error) {
         console.error("Error executing layout generation loop:", error);
     }
@@ -112,7 +112,7 @@ async function updateNotificationBadge() {
 async function handleNotificationClick(targetUrl, id) {
     try {
         await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/notifications/${id}/read`, { 
-            method: 'POST',
+            method: 'PUT',
             credentials: 'include'
         });
         
