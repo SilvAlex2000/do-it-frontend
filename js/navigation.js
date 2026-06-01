@@ -84,7 +84,7 @@ async function navigateTo(pageName) {
                 main.innerHTML = templateHtml;
                 document.getElementById('profile-username-header').innerText = userData.username;
                 avatar.src = window.getProfilePicUrl(userData.profile_pic);
-				if (avatar.includes('/img/default-avatar.png')) {
+				if (avatar.src.includes('/img/default-avatar.png')) {
 					avatar.src = '/img/default-avatar.png';
 				}
                 
