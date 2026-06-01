@@ -1,4 +1,5 @@
 window.getProfilePicUrl = function(path) {
+	console.log(path)
     if (!path || path === 'null' || path === '/null') {
         return '/img/default-avatar.png';
     }
