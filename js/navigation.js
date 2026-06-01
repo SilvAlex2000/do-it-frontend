@@ -79,10 +79,12 @@ async function navigateTo(pageName) {
                 const templateRes = await fetch('/templates/user_profile_public.html');
                 if (!templateRes.ok) throw new Error("Profile template layout not found");
                 const templateHtml = await templateRes.text();
+				const avatar = document.getElementById('profile-avatar-header').src;
 
                 main.innerHTML = templateHtml;
                 document.getElementById('profile-username-header').innerText = userData.username;
-                document.getElementById('profile-avatar-header').src = window.getProfilePicUrl(userData.profile_pic);
+                avatar = window.getProfilePicUrl(userData.profile_pic);
+				if (avatar.includes('/img/default-avatar.png')): avatar = '/img/default-avatar.png';
                 
                 if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
                 
