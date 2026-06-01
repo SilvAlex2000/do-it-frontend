@@ -52,9 +52,14 @@ async function loadComments(postId, container) {
             commentEl.innerHTML = html;
 
             const img = commentEl.querySelector('.comment-img-target');
-            if (img) {
-                img.src = c.profilePicPath ? `${window.APP_CONFIG.BACKEND_URL}/${c.profilePicPath}` : '/img/default-avatar.png';
-            }
+			if (img) {
+				if (c.profilePicPath) {
+					const cleanPath = c.profilePicPath.startsWith('/') ? c.profilePicPath.substring(1) : c.profilePicPath;
+					img.src = `${window.APP_CONFIG.BACKEND_URL}/${cleanPath}`;
+				} else {
+					img.src = '/img/default-avatar.png';
+				}
+			}
 
             const usernameSpan = commentEl.querySelector('.comment-username-target');
             if (usernameSpan) usernameSpan.innerText = c.username;
