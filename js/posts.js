@@ -150,6 +150,9 @@ function renderPost(templateHtml, post) {
     const downBtn = postEl.querySelector('.downvote-btn');
     if (upBtn) upBtn.onclick = (e) => { e.stopPropagation(); handleVote(post.id, 'UPVOTE', upSpan, downSpan, upBtn); };
     if (downBtn) downBtn.onclick = (e) => { e.stopPropagation(); handleVote(post.id, 'DOWNVOTE', upSpan, downSpan, downBtn); };
+	
+	if (upBtn && post.user_vote === 'UPVOTE') upBtn.classList.add('upvoted');
+	if (downBtn && post.user_vote === 'DOWNVOTE') downBtn.classList.add('downvoted');
 
     fragment.appendChild(postEl);
     return fragment;
