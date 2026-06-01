@@ -84,7 +84,9 @@ async function navigateTo(pageName) {
                 main.innerHTML = templateHtml;
                 document.getElementById('profile-username-header').innerText = userData.username;
                 avatar = window.getProfilePicUrl(userData.profile_pic);
-				if (avatar.includes('/img/default-avatar.png')): avatar = '/img/default-avatar.png';
+				if (avatar.includes('/img/default-avatar.png')) {
+					avatar = '/img/default-avatar.png';
+				}
                 
                 if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
                 
