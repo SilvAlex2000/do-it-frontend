@@ -82,10 +82,13 @@ async function navigateTo(pageName) {
 				const avatar = document.getElementById('profile-avatar-header');
 
                 main.innerHTML = templateHtml;
-                document.getElementById('profile-username-header').innerText = userData.username;
-                avatar.src = window.getProfilePicUrl(userData.profile_pic);
-				if (avatar.src.includes('/img/default-avatar.png')) {
-					avatar.src = '/img/default-avatar.png';
+				const avatarEl = document.getElementById('profile-avatar-header');
+				const usernameEl = document.getElementById('profile-username-header');
+
+				if (usernameEl) usernameEl.innerText = userData.username;
+
+				if (avatarEl) {
+					avatarEl.src = window.getProfilePicUrl(userData.profile_pic);
 				}
                 
                 if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
