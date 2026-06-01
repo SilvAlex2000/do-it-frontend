@@ -211,7 +211,10 @@ async function loadPosts() {
 
 async function handleVote(postId, type, upSpan, downSpan, clickedBtn) {
     try {
-        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}/vote?type=${type}`, { method: 'POST' });
+        const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}/vote?type=${type}`, {
+			method: 'POST',
+			credentials: 'include'
+		});
         if (response.ok) {
             const data = await response.json();
             upSpan.innerText = data.upvotes;
@@ -242,7 +245,8 @@ async function submitShare(btn) {
         const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}/share`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: caption })
+            body: JSON.stringify({ content: caption }),
+			credentials: 'include'
         });
 
         if (response.ok) {
@@ -267,7 +271,8 @@ async function deletePost(btn) {
 
     try {
         const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+			credentials: 'include'
         });
 
         if (response.ok) {
@@ -315,7 +320,8 @@ async function submitEdit(btn) {
         const response = await fetch(`${window.APP_CONFIG.BACKEND_URL}/api/posts/${postId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: newContent })
+            body: JSON.stringify({ content: newContent }),
+			credentials: 'include'
         });
 
         if (response.ok) {
