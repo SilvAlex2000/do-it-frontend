@@ -83,7 +83,7 @@ async function navigateTo(pageName) {
                 main.innerHTML = templateHtml;
 				console.log(userData.profile_pic);
                 document.getElementById('profile-username-header').innerText = userData.username;
-                document.getElementById('profile-avatar-header').src = userData.profile_pic;
+                document.getElementById('profile-avatar-header').src = ${window.APP_CONFIG.BACKEND_URL} + userData.profile_pic;
                 
                 if (typeof loadProfilePosts === 'function') loadProfilePosts(username);
                 
