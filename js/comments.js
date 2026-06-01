@@ -52,6 +52,7 @@ async function loadComments(postId, container) {
             commentEl.innerHTML = html;
 
             const img = commentEl.querySelector('.comment-img-target');
+			console.log(c.profilePicPath);
 			if (img) {
 				if (c.profilePicPath) {
 					const cleanPath = c.profilePicPath.startsWith('/') ? c.profilePicPath.substring(1) : c.profilePicPath;
